@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERING - Official Portal</title>
+    <meta name="description" content="peipeiが創造するプロジェクトへの入り口。">
+    <style>
+        /* 
+        ==========================================================================
+        CSS (カスケーディング・スタイル・シート)
+        ==========================================================================
+        */
+
+        :root {
+            --font-family-sans: 'Helvetica Neue', 'Arial', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+            --font-family-mono: 'SF Mono', 'Consolas', 'Menlo', monospace;
+            --color-text-light: #2c3e50; --color-bg-light: #ecf0f1; --color-primary-light: #3498db; --color-secondary-light: #9b59b6; --color-card-bg-light: rgba(255, 255, 255, 0.7); --color-card-border-light: #bdc3c7; --color-shadow-light: rgba(44, 62, 80, 0.15); --color-header-bg-light: rgba(236, 240, 241, 0.85);
+            --color-text-dark: #ecf0f1; --color-bg-dark: #1a1a2e; --color-primary-dark: #00a8ff; --color-secondary-dark: #f0c419; --color-card-bg-dark: rgba(26, 26, 46, 0.6); --color-card-border-dark: rgba(0, 168, 255, 0.3); --color-shadow-dark: rgba(0, 0, 0, 0.5); --color-header-bg-dark: rgba(26, 26, 46, 0.85);
+            --header-height: 70px; --border-radius: 12px; --transition-speed: 0.4s;
+        }
+        :root, :root.light-theme { --color-text: var(--color-text-light); --color-bg: var(--color-bg-light); --color-primary: var(--color-primary-light); --color-secondary: var(--color-secondary-light); --color-card-bg: var(--color-card-bg-light); --color-card-border: var(--color-card-border-light); --color-shadow: var(--color-shadow-light); --color-header-bg: var(--color-header-bg-light); --background-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        :root.dark-theme { --color-text: var(--color-text-dark); --color-bg: var(--color-bg-dark); --color-primary: var(--color-primary-dark); --color-secondary: var(--color-secondary-dark); --color-card-bg: var(--color-card-bg-dark); --color-card-border: var(--color-card-border-dark); --color-shadow: var(--color-shadow-dark); --color-header-bg: var(--color-header-bg-dark); --background-gradient: linear-gradient(135deg, #16222A 0%, #3A6073 100%); }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body { font-family: var(--font-family-sans); background-color: var(--color-bg); color: var(--color-text); line-height: 1.7; overflow-x: hidden; transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: var(--background-gradient); z-index: -2; transition: background var(--transition-speed) ease; }
+        
+        #cursor-aura { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, var(--color-primary) 0%, rgba(255,255,255,0) 60%); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: -1; opacity: 0.1; transition: background 0.2s linear, transform 0.1s ease-out; }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 2rem 0; }
+
+        .site-header { position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height); display: flex; justify-content: center; align-items: center; background-color: var(--color-header-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 2px 10px var(--color-shadow); z-index: 1000; transition: background-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; width: 90%; max-width: 1200px; }
+        .logo { font-size: 1.8rem; font-weight: bold; color: var(--color-primary); text-decoration: none; letter-spacing: 2px; transition: color var(--transition-speed) ease; cursor: pointer; user-select: none; }
+        #realtime-clock { font-family: var(--font-family-mono); font-size: 1.1rem; color: var(--color-text); opacity: 0.8; transition: color var(--transition-speed) ease; }
+        .theme-switcher { background: none; border: 2px solid var(--color-primary); color: var(--color-primary); padding: 8px 12px; border-radius: 50px; cursor: pointer; font-size: 1rem; transition: all var(--transition-speed) ease; }
+        .theme-switcher:hover { background: var(--color-primary); color: var(--color-bg); }
+
+        .hero { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 100vh; padding-top: var(--header-height); position: relative; }
+        .hero-title { font-size: 4rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(45deg, var(--color-primary), var(--color-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: fadeInDown 1s ease-out; }
+        .hero-subtitle { font-size: 1.5rem; margin-bottom: 2rem; color: var(--color-text); opacity: 0.8; animation: fadeInUp 1s ease-out 0.5s; animation-fill-mode: backwards; }
+        .scroll-down-indicator { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 2rem; color: var(--color-primary); animation: bounce 2s infinite; }
+        .section { padding: 60px 0; }
+        .section-title { font-size: 2.5rem; text-align: center; margin-bottom: 3rem; color: var(--color-primary); font-weight: 700; position: relative; }
+        .section-title::after { content: ''; display: block; width: 80px; height: 4px; background-color: var(--color-secondary); margin: 0.5rem auto 0; border-radius: 2px; }
+        .portal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .portal-card { background-color: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: var(--border-radius); padding: 2rem; box-shadow: 0 8px 32px 0 var(--color-shadow); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); text-decoration: none; color: var(--color-text); transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, border-color var(--transition-speed) ease; opacity: 0; transform: translateY(30px); }
+        .portal-card.visible { opacity: 1; transform: translateY(0); }
+        .portal-card:hover { transform: translateY(-10px); box-shadow: 0 16px 40px 0 var(--color-shadow); border-color: var(--color-primary); }
+        .card-icon { font-size: 3rem; margin-bottom: 1rem; color: var(--color-primary); }
+        .card-title { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--color-text); font-weight: 600; }
+        .card-description { font-size: 1rem; opacity: 0.8; margin-bottom: 1.5rem; }
+        .card-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .card-tag { background-color: rgba(0, 168, 255, 0.1); color: var(--color-primary); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.8rem; font-weight: 500; }
+        .utility-section { background-color: var(--color-card-bg); border: 1px solid var(--color-card-border); border-radius: var(--border-radius); padding: 2rem; margin-top: 4rem; }
+        .utility-content { margin-bottom: 2rem; } .utility-content:last-child { margin-bottom: 0; }
+        .utility-content h3 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--color-primary); } .utility-content p { margin-bottom: 1.5rem; }
+        .search-form-container { display: flex; gap: 1rem; }
+        .search-form-container input[type="search"] { flex-grow: 1; padding: 0.75rem 1rem; border-radius: 50px; border: 1px solid var(--color-card-border); background-color: var(--color-bg); color: var(--color-text); font-size: 1rem; transition: all var(--transition-speed) ease; }
+        .search-form-container input[type="search"]:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.2); }
+        .search-form-container .btn { flex-shrink: 0; }
+        .btn { background-color: var(--color-secondary); color: #fff; padding: 0.75rem 1.5rem; border: none; border-radius: 50px; cursor: pointer; font-size: 1rem; font-weight: 500; text-decoration: none; display: inline-block; transition: all var(--transition-speed) ease; }
+        .btn:hover { background-color: var(--color-primary); transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        
+        .terms-details { border-bottom: 1px solid var(--color-card-border); }
+        .terms-details:first-of-type { border-top: 1px solid var(--color-card-border); }
+        .terms-summary { list-style: none; display: flex; justify-content: space-between; align-items: center; padding: 1rem 0.5rem; cursor: pointer; font-weight: 600; transition: background-color 0.2s ease; }
+        .terms-summary::-webkit-details-marker { display: none; }
+        .terms-summary:hover { background-color: rgba(0,0,0,0.05); }
+        .terms-summary::after { content: '+'; font-size: 1.8rem; font-weight: 300; color: var(--color-primary); transition: transform 0.3s ease; }
+        .terms-details[open] > .terms-summary::after { transform: rotate(45deg); }
+        .terms-content { padding: 0.5rem 1rem 1.5rem 1rem; }
+        .terms-content p { margin-bottom: 1rem; }
+
+        .site-footer { text-align: center; padding: 2rem 0; margin-top: 4rem; border-top: 1px solid var(--color-card-border); }
+        
+        .pz-container-a { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 2000; visibility: hidden; opacity: 0; transition: opacity var(--transition-speed) ease, visibility 0s var(--transition-speed) linear; }
+        .pz-container-a.is-open { visibility: visible; opacity: 1; transition-delay: 0s; }
+        .pz-container-a .pz-overlay-b { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); cursor: pointer; }
+        .pz-container-a .pz-content-c { position: relative; background-color: var(--color-card-bg); padding: 2rem; border-radius: var(--border-radius); border: 1px solid var(--color-card-border); box-shadow: 0 16px 40px 0 var(--color-shadow); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); max-width: 600px; width: 90%; text-align: left; transform: scale(0.9); transition: transform var(--transition-speed) ease; max-height: 80vh; overflow-y: auto; }
+        .pz-container-a.is-open .pz-content-c { transform: scale(1); }
+        .pz-container-a .pz-content-c h2 { font-size: 2rem; color: var(--color-primary); margin-bottom: 1.5rem; text-align: center; }
+        .pz-container-a .pz-close-d { position: absolute; top: 1rem; right: 1rem; font-size: 2rem; color: var(--color-text); background: none; border: none; cursor: pointer; opacity: 0.7; transition: opacity var(--transition-speed) ease; line-height: 1; }
+        .pz-container-a .pz-close-d:hover { opacity: 1; }
+        .pz-section-e { margin-bottom: 2rem; border-bottom: 1px solid var(--color-card-border); padding-bottom: 1.5rem; } .pz-section-e:last-child { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+        .pz-section-e h3 { font-size: 1.3rem; margin-bottom: 1rem; color: var(--color-secondary); }
+        .pz-label-f { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .pz-input-g, .pz-textarea-h { width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--color-card-border); background-color: var(--color-bg); color: var(--color-text); font-size: 1rem; transition: all var(--transition-speed) ease; }
+        .pz-input-g:focus, .pz-textarea-h:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.2); }
+        .pz-textarea-h { min-height: 100px; resize: vertical; }
+        .pz-form-row-i { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center; }
+        .pz-form-row-i > * { flex: 1; }
+        .pz-toggle-j { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+        .pz-list-l { list-style: none; padding: 0; }
+        .pz-list-item-m { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.1); padding: 0.5rem 1rem; border-radius: 8px; margin-bottom: 0.5rem; }
+        .pz-list-item-m a { color: var(--color-primary); text-decoration: none; font-weight: bold; }
+        .pz-list-item-m button { background: #e74c3c; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-weight: bold; }
+
+        .is-hidden { display: none !important; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); } 40% { transform: translate(-50%, -20px); } 60% { transform: translate(-50%, -10px); } }
+        
+        @media (max-width: 768px) { html { font-size: 14px; } .header-content { flex-wrap: wrap; justify-content: space-between; } #realtime-clock { order: 3; width: 100%; text-align: center; margin-top: -10px; font-size: 0.9rem; } .hero-title { font-size: 3rem; } .hero-subtitle { font-size: 1.2rem; } .section-title { font-size: 2rem; } .portal-grid { grid-template-columns: 1fr; } .search-form-container { flex-direction: column; } .pz-form-row-i { flex-direction: column; } }
+    </style>
+</head>
+<body>
+
+    <div id="cursor-aura"></div>
+
+    <header class="site-header">
+        <div class="header-content">
+            <a class="logo">PERING</a>
+            <div id="realtime-clock"></div>
+            <button id="theme-switcher" class="theme-switcher">テーマ切替</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero"> <h1 class="hero-title">Portal of Creation</h1> <p class="hero-subtitle">peipeiが創造する世界へようこそ。</p> <a href="#main-projects" class="scroll-down-indicator"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg> </a> </section>
+        <section id="main-projects" class="section"> <div class="container"> <h2 class="section-title">Main Projects</h2> <div id="main-projects-grid" class="portal-grid"></div> </div> </section>
+        <section id="fun-projects" class="section"> <div class="container"> <h2 class="section-title">Lab & Fun Projects</h2> <div id="fun-projects-grid" class="portal-grid"></div> </div> </section>
+        <section id="utility" class="section"> <div class="container"> <h2 class="section-title">Utility</h2> <div class="utility-section"> <div id="google-search-section" class="utility-content"> <h3>Search the Web</h3> <p>気になることがあれば、ここからすぐにウェブ検索ができます。</p> <form action="https://www.google.com/search" method="get" target="_blank" rel="noopener noreferrer" class="search-form-container"> <input type="search" name="q" placeholder="Googleで検索..." required> <button type="submit" class="btn">検索</button> </form> </div> <div class="utility-content"> <h3>専用区画 (ユーザーデータ管理)</h3> <p>このウェブサイトでは、閲覧体験向上のため、テーマや各種カスタム設定をブラウザに保存します。以下のボタンで全設定をリセットできます。</p> <button id="clear-storage-button" class="btn">全設定をリセット</button> </div> <div id="terms-of-service"> <h3>利用規約</h3> <p>当サイトをご利用いただく前に、以下の利用規約をよくお読みください。</p> <details class="terms-details"><summary class="terms-summary">第1章 総則</summary><div class="terms-content"><p><strong>第1条 (本規約の適用範囲)</strong><br>本利用規約（以下、「本規約」といいます。）は、peipei（以下、「当サイト運営者」といいます。）が提供するこのポータルサイト（以下、「本サイト」といいます。）の利用に関する条件を定めるものです。本サイトを利用するすべてのユーザー（以下、「ユーザー」といいます。）は、本サイトを利用することにより、本規約のすべての内容に同意したものとみなされます。</p><p><strong>第2条 (本規約とGitHub利用規約)</strong><br>本サイトはGitHub Pagesのサービスを利用して公開されています。そのため、本サイトの利用にあたっては、本規約に加えて、GitHubの利用規約が適用されます。本規約とGitHubの利用規約との間に矛盾が生じた場合は、GitHubの利用規約が優先されるものとします。</p><p><strong>第3条 (本規約の変更)</strong><br>当サイト運営者は、ユーザーへの事前の通知なく、いつでも本規約を変更できるものとします。変更後の本規約は、本サイト上に掲載された時点から効力を生じるものとし、ユーザーが本規約の変更後も本サイトの利用を継続する場合、変更後の本規約に同意したものとみなします。</p></div></details> <details class="terms-details"><summary class="terms-summary">第2章 サイトの利用</summary><div class="terms-content"><p><strong>第4条 (知的財産権について)</strong><br>本サイトを構成するコンテンツ（テキスト、画像、コード等）について、当サイト運営者は最低限しか著作権を主張しません。本サイトのコンテンツの多くはAIによって生成されたものであり、ユーザーは自己の責任において法律で認められる範囲で自由に利用することができます。ただし、各リンク先のプロジェクトコンテンツについては、それぞれのプロジェクトが定めるライセンスに従うものとします。</p><p><strong>第5条 (禁止事項)</strong><br>ユーザーは、本サイトの利用にあたり、以下の行為をしてはなりません。<br>1. 法令または規約に違反する行為<br>2. 犯罪行為に関連する行為<br>3. 本サイトのサーバーやネットワークの機能を破壊したり、妨害したりする行為<br>4. 本サイトの運営を妨害するおそれのある行為<br>5. その他、当サイト運営者が不適切と判断する行為</p></div></details> <details class="terms-details"><summary class="terms-summary">第3章 免責事項</summary><div class="terms-content"><p><strong>第6条 (保証の否認および免責事項)</strong><br>1. 当サイト運営者は、本サイトに事実上または法律上の瑕疵（安全性、信頼性、正確性、完全性、有効性、特定の目的への適合性、セキュリティなどに関する欠陥、エラーやバグ、権利侵害などを含みます。）がないことを、明示的にも黙示的にも保証しておりません。<br>2. 当サイト運営者は、本サイトに起因してユーザーに生じたいかなる損害についても、一切の責任を負いません。本サイトの利用は、すべてユーザー自身の責任において行うものとします。<br>3. 本サイトからリンクによって移動できる第三者のウェブサイト、およびそのコンテンツやサービスについて、当サイト運営者はその内容を保証するものではなく、一切の責任を負いません。リンク先のウェブサイトは、それぞれの運営者の責任によって管理されており、ユーザーは自身の責任でこれを利用するものとします。<br>4. 当サイト運営者は、ユーザーへの予告なく、本サイトの内容を変更、中断、または終了することができます。これによってユーザーに何らかの不利益や損害が生じた場合でも、当サイト運営者は責任を負わないものとします。</p></div></details> </div> </div> </div> </section>
+    </main>
+    
+    <footer class="site-footer">
+        <p>&copy; <span id="current-year"></span> peipei. All Rights Reserved.</p>
+    </footer>
+
+
+<script>
+/* 
+==========================================================================
+JavaScript
+==========================================================================
+*/
+document.addEventListener('DOMContentLoaded', () => {
+
+    /*
+    ==========================================================================
+    【★】プロジェクトの追加はここで行います
+    ==========================================================================
+    新しいプロジェクトを追加するには、下の `projects` 配列に新しいオブジェクトを
+    コピー＆ペーストして、内容を書き換えるだけです。
+
+    ▼ コピペ用テンプレート ▼
+    { 
+        title: '新しいプロジェクト名', 
+        description: 'プロジェクトの簡単な説明。', 
+        url: 'プロジェクトのURL', 
+        icon: '💻', // アイコン絵文字
+        category: 'main', // 'main' または 'fun'
+        tags: ['タグ1', 'タグ2'] 
+    },
+
+    */
+    const projects = [
+        { title: 'Prompt Hub Pro', description: '次世代のAI体験を補助する、革新的なプロンプト管理サービス。', url: 'https://peipei2020x.github.io/PHub/', icon: '💻', category: 'main', tags: ['prompt', 'management', 'ForAI'] },
+        { title: 'Viewer Ultimate', description: '各自の画像を有用なユーザー体験へ、アルティメットビュアー。', url: 'https://peipei2020x.github.io/VU/', icon: '📷', category: 'main', tags: ['Go', 'Images Viewer', 'Many images'] },
+        { title: '準備中', description: '概要', url: 'https://peipei2020x.github.io/', icon: '🎨', category: 'fun', tags: ['1', '2'] },
+        { title: '準備中', description: '概要', url: 'https://peipei2020x.github.io/', icon: '😂', category: 'fun', tags: ['1', '2', '3'] },
+    ];
+
+    const STEALTH_CONFIG = {
+        panelClass: 'pz-container-a',
+        overlayClass: 'pz-overlay-b',
+        contentClass: 'pz-content-c',
+        closeClass: 'pz-close-d',
+        sectionClass: 'pz-section-e',
+        labelClass: 'pz-label-f',
+        inputClass: 'pz-input-g',
+        textareaClass: 'pz-textarea-h',
+        formRowClass: 'pz-form-row-i',
+        toggleClass: 'pz-toggle-j',
+        listClass: 'pz-list-l',
+        listItemClass: 'pz-list-item-m',
+        storageKeyTheme: 'pz_t',
+        storageKeySettings: 'pz_s'
+    };
+    
+    let settingsPanel, settings = {};
+    const getEl = (id) => document.getElementById(id);
+    const queryEl = (selector) => document.querySelector(selector);
+    const mainProjectsGrid = getEl('main-projects-grid'), funProjectsGrid = getEl('fun-projects-grid'), themeSwitcher = getEl('theme-switcher'), clearStorageButton = getEl('clear-storage-button'), currentYearSpan = getEl('current-year'), cursorAura = getEl('cursor-aura'), logoElement = queryEl('.logo'), clockElement = getEl('realtime-clock'), searchSection = getEl('google-search-section');
+
+    function createDynamicElements() {
+        const p = STEALTH_CONFIG;
+        const panelHTML = `
+            <div class="${p.overlayClass}"></div>
+            <div class="${p.contentClass}">
+                <button class="${p.closeClass}">&times;</button>
+                <h2>設定パネル</h2>
+                <div class="${p.sectionClass}">
+                    <h3>表示設定</h3>
+                    <div class="${p.toggleClass}"><label for="toggle-clock">リアルタイムクロック</label><input type="checkbox" id="toggle-clock"></div>
+                    <div class="${p.toggleClass}"><label for="toggle-search">Google検索フォーム</label><input type="checkbox" id="toggle-search"></div>
+                </div>
+                <div class="${p.sectionClass}">
+                    <h3>ショートカット</h3>
+                    <div class="${p.formRowClass}"><input type="text" id="shortcut-name" class="${p.inputClass}" placeholder="名前"><input type="url" id="shortcut-url" class="${p.inputClass}" placeholder="https://~"></div>
+                    <button id="add-shortcut-btn" class="btn" style="width:100%;">追加</button>
+                    <ul id="shortcuts-list" class="${p.listClass}" style="margin-top:1rem;"></ul>
+                </div>
+                <div class="${p.sectionClass}"><h3>メモ帳</h3><textarea id="memo-pad" class="${p.textareaClass}" placeholder="ここにメモを入力..."></textarea></div>
+            </div>`;
+        settingsPanel = document.createElement('div');
+        settingsPanel.className = p.panelClass;
+        settingsPanel.innerHTML = panelHTML;
+        document.body.appendChild(settingsPanel);
+    }
+    
+    function loadSettings() {
+        const savedSettings = JSON.parse(localStorage.getItem(STEALTH_CONFIG.storageKeySettings));
+        const defaultSettings = {
+            showClock: false, 
+            showSearch: false,
+            shortcuts: [], 
+            memo: ''
+        };
+        settings = { ...defaultSettings, ...savedSettings };
+        applyAllSettings();
+    }
+    
+    function saveSettings() { localStorage.setItem(STEALTH_CONFIG.storageKeySettings, JSON.stringify(settings)); }
+    
+    function applyAllSettings() {
+        clockElement.classList.toggle('is-hidden', !settings.showClock);
+        searchSection.classList.toggle('is-hidden', !settings.showSearch);
+        getEl('toggle-clock').checked = settings.showClock;
+        getEl('toggle-search').checked = settings.showSearch;
+        renderShortcuts();
+        getEl('memo-pad').value = settings.memo;
+    }
+
+    function createCardHTML(p) { const t = p.tags.map(tag => `<span class="card-tag">${tag}</span>`).join(''); return `<div class="card-icon">${p.icon}</div><h3 class="card-title">${p.title}</h3><p class="card-description">${p.description}</p><div class="card-tags">${t}</div>`; }
+    function renderProjectCards() { if (!mainProjectsGrid || !funProjectsGrid) return; mainProjectsGrid.innerHTML = ''; funProjectsGrid.innerHTML = ''; projects.forEach(p => { const c = document.createElement('a'); c.className = 'portal-card'; c.href = p.url; c.target = '_blank'; c.rel = 'noopener noreferrer'; c.innerHTML = createCardHTML(p); (p.category === 'main' ? mainProjectsGrid : funProjectsGrid).appendChild(c); }); }
+    function applyTheme(t) { document.documentElement.classList.toggle('dark-theme', t === 'dark'); document.documentElement.classList.toggle('light-theme', t !== 'dark'); }
+    function toggleTheme() { const c = localStorage.getItem(STEALTH_CONFIG.storageKeyTheme) || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); const n = c === 'light' ? 'dark' : 'light'; localStorage.setItem(STEALTH_CONFIG.storageKeyTheme, n); applyTheme(n); }
+    function initializeTheme() { const s = localStorage.getItem(STEALTH_CONFIG.storageKeyTheme); if (s) applyTheme(s); else { const p = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; applyTheme(p ? 'dark' : 'light'); } }
+    function renderShortcuts() { const l = getEl('shortcuts-list'); l.innerHTML = ''; settings.shortcuts.forEach((s, i) => { const li = document.createElement('li'); li.className = STEALTH_CONFIG.listItemClass; li.innerHTML = `<a href="${s.url}" target="_blank" rel="noopener noreferrer">${s.name}</a><button data-index="${i}" class="delete-shortcut-btn">&times;</button>`; l.appendChild(li); }); }
+    function addShortcut() { const n = getEl('shortcut-name'), u = getEl('shortcut-url'); const name = n.value.trim(), url = u.value.trim(); if (name && url) { settings.shortcuts.push({ name, url }); saveSettings(); renderShortcuts(); n.value = ''; u.value = ''; } }
+    function deleteShortcut(i) { settings.shortcuts.splice(i, 1); saveSettings(); renderShortcuts(); }
+    function clearLocalStorage() { if (confirm('本当にこのサイトの全設定をリセットしますか？')) { localStorage.clear(); alert('全設定がリセットされました。ページを再読み込みします。'); location.reload(); } }
+    function setupScrollAnimations() { const c = document.querySelectorAll('.portal-card'); const o = new IntersectionObserver((e) => { e.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); o.unobserve(entry.target); } }); }, { threshold: 0.1 }); c.forEach(card => o.observe(card)); }
+    function setupCursorAura() { if (!cursorAura) return; window.addEventListener('mousemove', e => { requestAnimationFrame(() => { cursorAura.style.transform = `translate(${e.clientX - 200}px, ${e.clientY - 200}px)`; }); }); }
+    function updateFooterYear() { if (currentYearSpan) currentYearSpan.textContent = new Date().getFullYear(); }
+    function setupRealtimeClock() { if (!clockElement) return; function update() { const n = new Date(); clockElement.textContent = `${String(n.getHours()).padStart(2, '0')}:${String(n.getMinutes()).padStart(2, '0')}:${String(n.getSeconds()).padStart(2, '0')}`; } update(); setInterval(update, 1000); }
+    function setupSettingsModal() { let c = 0; logoElement.addEventListener('click', () => { c++; if (c === 7) { settingsPanel.classList.add('is-open'); c = 0; } }); const closeModal = () => settingsPanel.classList.remove('is-open'); settingsPanel.querySelector(`.${STEALTH_CONFIG.overlayClass}`).addEventListener('click', closeModal); settingsPanel.querySelector(`.${STEALTH_CONFIG.closeClass}`).addEventListener('click', closeModal); }
+    
+    function setupEventListeners() {
+        themeSwitcher.addEventListener('click', toggleTheme);
+        clearStorageButton.addEventListener('click', clearLocalStorage);
+        
+        const s = (id, event, handler) => getEl(id).addEventListener(event, handler);
+        s('toggle-clock', 'change', e => { settings.showClock = e.target.checked; saveSettings(); clockElement.classList.toggle('is-hidden', !settings.showClock); });
+        s('toggle-search', 'change', e => { settings.showSearch = e.target.checked; saveSettings(); searchSection.classList.toggle('is-hidden', !settings.showSearch); });
+        
+        s('add-shortcut-btn', 'click', addShortcut);
+        getEl('shortcuts-list').addEventListener('click', e => { if (e.target.classList.contains('delete-shortcut-btn')) deleteShortcut(e.target.dataset.index); });
+        s('memo-pad', 'input', e => { settings.memo = e.target.value; saveSettings(); });
+    }
+
+    function init() {
+        createDynamicElements();
+        loadSettings();
+        initializeTheme();
+        setupEventListeners();
+        renderProjectCards();
+        updateFooterYear();
+        setupCursorAura();
+        setupRealtimeClock();
+        setupSettingsModal();
+        setupScrollAnimations();
+    }
+    
+    init();
+});
+</script>
+</body>
+</html>
